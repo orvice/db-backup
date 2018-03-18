@@ -11,17 +11,8 @@ RUN go-wrapper download
 RUN CGO_ENABLED=0 go build
 
 
-FROM alpine
+FROM mysql
 
 COPY --from=builder /go/src/github.com/orvice/db-backup/db-backup .
-
-RUN apk update
-RUN apk upgrade
-RUN apk add ca-certificates && update-ca-certificates
-# Change TimeZone
-RUN apk add --update tzdata
-ENV TZ=Asia/Shanghai
-# Clean APK cache
-RUN rm -rf /var/cache/apk/*
 
 ENTRYPOINT [ "./db-backup" ]
