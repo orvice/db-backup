@@ -4,11 +4,10 @@ import (
 	"time"
 
 	"github.com/lukerodham/barkup"
-	"github.com/sirupsen/logrus"
 	"github.com/orvice/kit/log"
 )
 
-var(
+var (
 	logger log.Logger
 )
 
@@ -35,7 +34,7 @@ func backup() {
 	// bucket in the `db_backups` folder
 	err := mysql.Export(false).To("db_backups/", s3)
 	if err != nil {
-		logrus.Error(err)
+		logger.Error(err)
 	}
 }
 
@@ -43,6 +42,7 @@ func main() {
 	logger = log.NewDefaultLogger()
 	InitEnv()
 	for {
+		logger.Infof("Start backup time %v", time.Now())
 		backup()
 		time.Sleep(time.Minute * 10)
 	}
