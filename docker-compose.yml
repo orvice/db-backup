@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  ss:
+    image: orvice/db-backup
+    restart: always
+    volumes:
+      - ./log:/var/log
+    env_file:
+      - config.env
+    container_name: db-backup
