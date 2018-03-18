@@ -11,7 +11,9 @@ RUN go-wrapper download
 RUN CGO_ENABLED=0 go build
 
 
-FROM mysql
+FROM debian
+
+RUN apt-get update && apt-get install -y mysql-client && rm -rf /var/lib/apt
 
 COPY --from=builder /go/src/github.com/orvice/db-backup/db-backup .
 
