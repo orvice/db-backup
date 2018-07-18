@@ -5,6 +5,7 @@ import (
 
 	"github.com/lukerodham/barkup"
 	"github.com/orvice/kit/log"
+	tk "github.com/orvice/kit/time"
 )
 
 var (
@@ -42,7 +43,7 @@ func main() {
 	logger = log.NewDefaultLogger()
 	InitEnv()
 	for {
-		logger.Infof("Start backup time %v", time.Now())
+		logger.Infof("Start backup time %v", time.Now().Format(tk.DefaultTimeFormat))
 		backup()
 		time.Sleep(time.Minute * 10)
 	}

@@ -1,20 +1,21 @@
-FROM golang:1.9 as builder
+FROM golang:1.10 as builder
 
 ## Create a directory and Add Code
 RUN mkdir -p /go/src/github.com/orvice/db-backup
 WORKDIR /go/src/github.com/orvice/db-backup
 ADD .  /go/src/github.com/orvice/db-backup
 
-# Download and install any required third party dependencies into the container.
-RUN go-wrapper download
-# RUN go-wrapper install
+RUN go get
 RUN CGO_ENABLED=0 go build
 
 
-FROM debian
+FROM alpine:3.7
+RUN apk update
+RUN apk add --no-cache mysql-client
 
-RUN apt-get update && apt-get install -y mysql-client && rm -rf /var/lib/apt
+RUN mkdir -p /app/bin
+WORKDIR /app/bin
 
 COPY --from=builder /go/src/github.com/orvice/db-backup/db-backup .
 
-ENTRYPOINT [ "./db-backup" ]
+ENTRYPOINT [ "/app/bin/db-backup" ]
