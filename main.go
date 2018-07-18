@@ -33,7 +33,13 @@ func backup() {
 
 	// Export the database, and send it to the
 	// bucket in the `db_backups` folder
-	err := mysql.Export(false).To("db_backups/", s3)
+	result := mysql.Export(false)
+	if result.Error != nil {
+		logger.Errorf("back error : %v", result.Error.Error())
+		return
+	}
+
+	err := result.To("db_backups/", s3)
 	if err != nil {
 		logger.Error(err)
 	}
